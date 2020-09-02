@@ -1,0 +1,14 @@
+version: "3.7"
+services:
+  localstack:
+    image: localstack/localstack:latest
+    ports:
+      - '4576:4576'
+    environment:
+      - SERVICES=sqs
+      - USE_SSL=false
+    # Commenting out the following lines causes the test to fail on LocalStack 0.11.3+ , but not on earlier versions
+    entrypoint:
+      - /bin/sh
+      - -c
+      - $$(ip -4 route list match 0/0 | awk '{print "export HOSTNAME_EXTERNAL="$$3}') && docker-entrypoint.sh
